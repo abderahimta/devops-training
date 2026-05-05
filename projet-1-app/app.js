@@ -3,12 +3,10 @@ const app = express();
 
 app.use(express.json());
 
-// Route principale
 app.get('/', (req, res) => {
   res.json({ message: "API DevOps Express 🚀" });
 });
 
-// Healthcheck (très utilisé en DevOps)
 app.get('/health', (req, res) => {
   res.json({
     status: "UP",
@@ -17,7 +15,6 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Exemple API métier
 app.get('/api/users', (req, res) => {
   res.json([
     { id: 1, name: "Alice" },
@@ -25,12 +22,10 @@ app.get('/api/users', (req, res) => {
   ]);
 });
 
-// Route 404
 app.use((req, res) => {
   res.status(404).json({ error: "Not Found" });
 });
 
-// Lancement serveur
 app.listen(3000, () => {
   console.log("Server running on port 3000");
 });
