@@ -9,6 +9,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: projet-1-app
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -19,12 +23,7 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        run: |
-          cd project-1-app
-          npm install
+        run: npm install
 
-      - name: Run basic check
-        run: |
-          cd project-1-app
-          node app.js &
-          sleep 5
+      - name: Run app test
+        run: node app.js &        
