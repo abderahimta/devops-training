@@ -11,7 +11,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./project-1-app
+        working-directory: ./projet-1-app
 
     steps:
       - name: Checkout code
