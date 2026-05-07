@@ -35,7 +35,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Tag Docker image
-        run: docker tag devops-app abderahimta/devops-app:latest
+        run: docker tag devops-app abderahim7875/devops-app:latest
 
       - name: Push Docker image
-        run: docker push abderahimta/devops-app:latest     
+        run: docker push abderahim7875/devops-app:latest     
