@@ -25,7 +25,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          cd project-1-app
+          cd projet-1-app
           docker build -t abderahim7875/devops-app:latest .
 
       - name: Login DockerHub
