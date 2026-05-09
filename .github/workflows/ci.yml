@@ -1,41 +1,79 @@
-name: CI with Docker
+name: CI/CD with Terraform Control
 
 on:
   push:
     branches:
       - main
 
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Terraform action"
+        required: true
+        default: "apply"
+        type: choice
+        options:
+          - apply
+          - destroy
+
 jobs:
-  build:
+  docker:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: ./projet-1-app
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-
-      - name: Install dependencies
-        run: npm install
+      - uses: actions/checkout@v4
 
       - name: Build Docker image
-        run: docker build -t devops-app .
+        run: |
+          cd project-1-app
+          docker build -t abderahim7875/devops-app:latest .
 
-      - name: Docker login
+      - name: Login DockerHub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Tag Docker image
-        run: docker tag devops-app abderahim7875/devops-app:latest
-
       - name: Push Docker image
-        run: docker push abderahim7875/devops-app:latest     
+        run: docker push abderahim7875/devops-app:latest
+
+  terraform-apply:
+    if: github.event.inputs.action == 'apply' || github.event_name == 'push'
+    runs-on: ubuntu-latest
+    needs: docker
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: |
+          cd projet-3-terraform
+          terraform init
+
+      - name: Terraform Apply
+        run: |
+          cd projet-3-terraform
+          terraform apply -auto-approve
+
+  terraform-destroy:
+    if: github.event.inputs.action == 'destroy'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: |
+          cd projet-3-terraform
+          terraform init
+
+      - name: Terraform Destroy
+        run: |
+          cd projet-3-terraform
+          terraform destroy -auto-approve     
